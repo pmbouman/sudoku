@@ -2,6 +2,9 @@
 
 import csv
 
+def marked_only(puzzle):
+    return dict(filter(lambda elem: elem[1]["Marked"] == "Marked", puzzle.items()))
+
 def init_clueset(cellchar):
     if (cellchar == ""):
         return full_clueset
@@ -11,7 +14,7 @@ def init_clueset(cellchar):
 
 readin_state = {}
 
-full_clueset = set(range(1, 10)) ###
+full_clueset = set(range(1, 10))
 
 f = open("puzzle1.csv")
 
@@ -23,8 +26,10 @@ for rowname in rownames:
     for i in range(0, 9):
         cellname = rowname + str(i+1)
         entry = init_clueset(row_entries[i])
-        readin_state[cellname] = {"Marked": "Unmarked", "Allowed":entry}
-
-print(readin_state)
+        readin_state[cellname] = {"Marked": "Unmarked", "Allowed": entry}
 
 
+f.close()
+
+print(dict(marked_only(readin_state)))
+#print(type(list(readin_state.items())[0]))
