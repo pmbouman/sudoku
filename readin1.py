@@ -1,5 +1,5 @@
-def marked_only(puzzle):
-    return dict(filter(lambda elem: elem[1]["Marked"] == "Marked", puzzle.items()))
+def Unmarked_only(puzzle):
+    return dict(filter(lambda elem: elem[1]["Marked"] == "Unmarked", puzzle.items()))
 
 
 def init_clueset(cellchar):
@@ -33,7 +33,6 @@ def printcell(puzzle, cellname):
     allowables = puzzle[cellname]["Allowed"]
     if len(allowables) == 1:
         print(next(iter(allowables)), end="")
-        """ NOTE: learn why next(iter(set)) works """
     else:
         print(".", end="")
         """NOTE:  add code to make spaces between subsquares """
@@ -50,38 +49,58 @@ def print_state(puzzle):
         if rowname in {"c", "f"}:
             print("------------")
 
-""" Pseudocode for the main loop 
+
+def Nallowed(puzzle, cellname):
+    return len(puzzle[cellname]["Allowed"])
+
+def inv_allowed_counts(puzzle):
+    counts = map(puzzle.keys(), lambda cellname: Nallowed(puzzle, cellname))
+
+    inv_map = {}
+    for k, v in counts.items():
+        inv_map[v] = inv_map.get(v, []) + [k]
+ 
+    return inv_map
+
+"""
+
+
+main loop
 
 min_number_allowed(cell_list):
     Pull sizes of all allowed sets on cell_list
     Return minimum of this list
 
+def minloop(puzzle):
+inv_map = {}
+for k, v in my_map.iteritems():
+    inv_map[v] = inv_map.get(v, []) + [k]
 
 
-def mainloop(puzzle, Nsol):
+
+
+def mainloop(puzzle):
      Make a local mutable copy of puzzle parameter
-     Nsol is the number of solutions so far
-    invoke as  mainloop(readin_state, 0)
 
     select all the unmarked 'cells' from puzzle
     the result will be a sub-dictionary
-     If zero unmarked cells: print_state, return Nsol+1 - another solution  
-         Find a cell with the smallest allowable size 
+     If zero unmarked cells: print_state, return 1 - another solution
+         Find a cell with the smallest allowable size
 
     if min_number_allowed(unmarked_cells) == 0, halt and return Nsol
 
          Else if minsize is 1, sweep value from rows, columns
          and subsquares in the total puzzle copy
          (not just the unmarked cells)
-         NOTE: subsquare attribute must be added to puzzle data structure 
-         Mark the square in the whole puzzle 
+         NOTE: subsquare attribute must be added to puzzle data structure
+         Mark the square in the whole puzzle
     Then repeat at line 59
 
         Else if smallest allowed set is size 2+:
         Choose a cell of that size
-        for each allowable value in the cell, 
+        for each allowable value in the cell,
         recurse on mainloop with the puzzle where the chosen cell has only
         one allowable value of the 2+ in that cell
         Use Nsol output from last call as parameter for each of these calls
         Return the updated Nsol as end of function
-     """
+"""
