@@ -1,8 +1,33 @@
+"""
+
+Celtral data tructure is a dict mapping grid coordinates
+(a1-b9") to two values: marked/unmarked (see below) and
+the set of remaining allowable values for the cell 9which
+may be only one value for "solved" cells)
+
+Initialization means pluggig in values for cell "clues"
+and then 1-9 for the blank cells
+"""
+
+def char_range(c1, c2):
+    """Generates the characters from `c1` to `c2`, inclusive."""
+    for c in range(ord(c1), ord(c2)+1):
+        yield chr(c)
+
+
+ROWNAMES = list(char_range("a ", "i"))
+
 def Unmarked_only(puzzle):
-    return dict(filter(lambda elem: elem[1]["Marked"] == "Unmarked", puzzle.items()))
+    return dict(filter(lambda elem: elem[1]["Marked?"] == "Unmarked", puzzle.items()))
 
 
 def init_clueset(cellchar):
+    """
+    During readin, the argument is the character from that cell
+    in the input file: either "", meaning ni vskue yet,
+    or the cell has a clue, and  return a size 1 set of 
+    the starting value of that cell
+    """
     FULL_CLUESET = set(range(1, 10))
     if (cellchar == ""):
         return FULL_CLUESET
@@ -11,8 +36,7 @@ def init_clueset(cellchar):
 
 
 def readfile(fname):
-    ROWNAMES = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
-    readin_state = {}
+    readin_puzzle = {}
     f = open(fname)
     for rowname in ROWNAMES:
         puzzle_row = f.readline()
@@ -21,18 +45,19 @@ def readfile(fname):
         for i in range(1, 10):
             cellname = rowname + str(i)
             entry = init_clueset(row_entries[i-1])
-            """ column name are 1-based,
-            row_entry elements are 0-based"""
-
-            readin_state[cellname] = {"Marked": "Unmarked", "Allowed": entry}
+            readin_puzzle[cellname] = {"Marked?": "Unmarked", "Allowed": entry}
     f.close()
-    return readin_state
+    return readin_puzzle
 
 
 def printcell(puzzle, cellname):
     allowables = puzzle[cellname]["Allowed"]
     if len(allowables) == 1:
         print(next(iter(allowables)), end="")
+        """
+        This construction extrcts the single elemnt of allowables
+        in this branch
+        """
     else:
         print(".", end="")
 
