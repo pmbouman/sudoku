@@ -35,7 +35,6 @@ def printcell(puzzle, cellname):
         print(next(iter(allowables)), end="")
     else:
         print(".", end="")
-        """NOTE:  add code to make spaces between subsquares """
 
 
 def print_state(puzzle):
@@ -53,12 +52,13 @@ def print_state(puzzle):
 def Nallowed(puzzle, cellname):
     return len(puzzle[cellname]["Allowed"])
 
+
 def inv_allowed_counts(puzzle):
-    counts = map(puzzle.keys(), lambda cellname: Nallowed(puzzle, cellname))
+    counts = dict(map(lambda cellname: Nallowed(puzzle, cellname), puzzle.keys()))
 
     inv_map = {}
-    for k, v in counts.items():
-        inv_map[v] = inv_map.get(v, []) + [k]
+    for key, value in counts.items():
+        inv_map[value] = inv_map.get(value, []) + [key]
  
     return inv_map
 
