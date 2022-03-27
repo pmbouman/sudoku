@@ -15,7 +15,8 @@ def char_range(c1, c2):
         yield chr(c)
 
 
-ROWNAMES = list(char_range("a ", "i"))
+ROWNAMES = list(char_range("a", "i"))
+
 
 def Unmarked_only(puzzle):
     return dict(filter(lambda elem: elem[1]["Marked?"] == "Unmarked", puzzle.items()))
@@ -34,6 +35,8 @@ def init_clueset(cellchar):
     else:
         return {int(cellchar)}
 
+""" TODO: break this into parts so that one fucntion reds the file and produces
+a list of rows, for a second fuction to build the puzzle variable value """
 
 def readfile(fname):
     readin_puzzle = {}
@@ -49,6 +52,9 @@ def readfile(fname):
     f.close()
     return readin_puzzle
 
+"""DEBUG"""
+p1 = readfile("puzzle1.csv")
+
 
 def printcell(puzzle, cellname):
     allowables = puzzle[cellname]["Allowed"]
@@ -63,11 +69,11 @@ def printcell(puzzle, cellname):
 
 
 def print_state(puzzle):
-    ROWNAMES = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
     for rowname in ROWNAMES:
         for i in range(1, 10):
             printcell(puzzle, rowname + str(i))
             if i in {3, 6}:
+                """ Using end = "" prints without newline"""
                 print("|", end="")
         print("\n", end="")
         if rowname in {"c", "f"}:
@@ -75,14 +81,18 @@ def print_state(puzzle):
 
 
 def Nallowed(puzzle, cellname):
+    """
+    Input: uzzle value and name of cell
+    Output: N of allowable values for that cell
+    """
     return len(puzzle[cellname]["Allowed"])
 
 
 def inv_allowed_counts(puzzle):
-    counts = dict(map(lambda cellname: Nallowed(puzzle, cellname), puzzle.keys()))
+    allowed_counts = {key: Nallowed(puzzle, key) for key in puzzle.keys()}
 
     inv_map = {}
-    for key, value in counts.items():
+    for key, value in allowed_counts.items():
         inv_map[value] = inv_map.get(value, []) + [key]
  
     return inv_map
