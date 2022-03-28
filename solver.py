@@ -1,3 +1,4 @@
+ import sys
 """
 
 Celtral data tructure is a dict mapping grid coordinates
@@ -9,6 +10,7 @@ Initialization means pluggig in values for cell "clues"
 and then 1-9 for the blank cells
 """
 
+
 def char_range(c1, c2):
     """Generates the characters from `c1` to `c2`, inclusive."""
     for c in range(ord(c1), ord(c2)+1):
@@ -19,7 +21,8 @@ ROWNAMES = list(char_range("a", "i"))
 
 
 def Unmarked_only(puzzle):
-    return dict(filter(lambda elem: elem[1]["Marked?"] == "Unmarked", puzzle.items()))
+    return dict(filter(lambda elem: elem[1]["Marked?"] == "Unmarked",
+                       puzzle.items()))
 
 
 def init_clueset(cellchar):
@@ -35,8 +38,10 @@ def init_clueset(cellchar):
     else:
         return {int(cellchar)}
 
+
 """ TODO: break this into parts so that one fucntion reds the file and produces
 a list of rows, for a second fuction to build the puzzle variable value """
+
 
 def readfile(fname):
     readin_puzzle = {}
@@ -51,6 +56,7 @@ def readfile(fname):
             readin_puzzle[cellname] = {"Marked?": "Unmarked", "Allowed": entry}
     f.close()
     return readin_puzzle
+
 
 """DEBUG"""
 p1 = readfile("puzzle1.csv")
@@ -88,6 +94,9 @@ def Nallowed(puzzle, cellname):
     return len(puzzle[cellname]["Allowed"])
 
 
+""" TODO: Break function into two """
+
+
 def inv_allowed_counts(puzzle):
     allowed_counts = {key: Nallowed(puzzle, key) for key in puzzle.keys()}
 
@@ -97,33 +106,22 @@ def inv_allowed_counts(puzzle):
  
     return inv_map
 
+
+def pull_unmarked(puzzle):
+    return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Unmarked"}
+
+ 
 """
-
-
-main loop
-
-min_number_allowed(cell_list):
-    Pull sizes of all allowed sets on cell_list
-    Return minimum of this list
-
-def minloop(puzzle):
-inv_map = {}
-for k, v in my_map.iteritems():
-    inv_map[v] = inv_map.get(v, []) + [k]
-
-
-
-
 def mainloop(puzzle):
-     Make a local mutable copy of puzzle parameter
+    unmarked = pull_unmarked(puzzle)
+    if (len(unmarked)) == 0:
+        print_state(puzzle)
+        sys.exit("Solution found")
 
-    select all the unmarked 'cells' from puzzle
-    the result will be a sub-dictionary
-     If zero unmarked cells: print_state, return 1 - another solution
-         Find a cell with the smallest allowable size
+    if min_number_allowed(unmarked) == 0:
+        sys.exit("no solution found")
 
-    if min_number_allowed(unmarked_cells) == 0, halt and return Nsol
-
+    else if (min_number_alloed
          Else if minsize is 1, sweep value from rows, columns
          and subsquares in the total puzzle copy
          (not just the unmarked cells)
