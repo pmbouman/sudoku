@@ -1,22 +1,27 @@
- import sys
-"""
+import sys
 
-Celtral data tructure is a dict mapping grid coordinates
+"""
+4/6/22 PMB
+Solver is a sudoku solver that solves by depth-first
+tree seaarch
+Central data tructure is a dict mapping grid coordinates
 (a1-b9") to two values: marked/unmarked (see below) and
 the set of remaining allowable values for the cell 9which
-may be only one value for "solved" cells)
+will  be only one value for "solved" cells)
 
+{ cellname -> { Msrked? :  (Marked, Unmarked
+), Allowable: (set of allowable values remaining in cell)}}
 Initialization means pluggig in values for cell "clues"
 and then 1-9 for the blank cells
 """
 
-
+""" First a utility function """
 def char_range(c1, c2):
     """Generates the characters from `c1` to `c2`, inclusive."""
     for c in range(ord(c1), ord(c2)+1):
         yield chr(c)
 
-
+"""and we setup the important constant for the list ["a" ... "i"]"""
 ROWNAMES = list(char_range("a", "i"))
 
 
@@ -27,10 +32,10 @@ def Unmarked_only(puzzle):
 
 def init_clueset(cellchar):
     """
-    During readin, the argument is the character from that cell
-    in the input file: either "", meaning ni vskue yet,
-    or the cell has a clue, and  return a size 1 set of 
-    the starting value of that cell
+    Solver configured tp read from CSV with an entry
+    for each cell (1:9) or a blank
+    This creates the set of possible walues in puzzle.
+    Allowed for that cell name.  
     """
     FULL_CLUESET = set(range(1, 10))
     if (cellchar == ""):
@@ -53,7 +58,7 @@ def readfile(fname):
         for i in range(1, 10):
             cellname = rowname + str(i)
             entry = init_clueset(row_entries[i-1])
-            readin_puzzle[cellname] = {"Marked?": "Unmarked", "Allowed": entry}
+            readin_puzzle[cellname] = {"Marked?": "Unmarked", "Allowable": entry}
     f.close()
     return readin_puzzle
 
@@ -63,7 +68,7 @@ p1 = readfile("puzzle1.csv")
 
 
 def printcell(puzzle, cellname):
-    allowables = puzzle[cellname]["Allowed"]
+    allowables = puzzle[cellname]["Allowable"]
     if len(allowables) == 1:
         print(next(iter(allowables)), end="")
         """
@@ -91,7 +96,7 @@ def Nallowed(puzzle, cellname):
     Input: uzzle value and name of cell
     Output: N of allowable values for that cell
     """
-    return len(puzzle[cellname]["Allowed"])
+    return len(puzzle[cellname]["Allowable"])
 
 
 """ TODO: Break function into two """
