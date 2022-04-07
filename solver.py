@@ -25,17 +25,12 @@ def char_range(c1, c2):
 ROWNAMES = list(char_range("a", "i"))
 
 
-def Unmarked_only(puzzle):
-    return dict(filter(lambda elem: elem[1]["Marked?"] == "Unmarked",
-                       puzzle.items()))
-
-
 def init_clueset(cellchar):
     """
     Solver configured tp read from CSV with an entry
     for each cell (1:9) or a blank
     This creates the set of possible walues in puzzle.
-    Allowed for that cell name.  
+    Allowed for that cell name.
     """
     FULL_CLUESET = set(range(1, 10))
     if (cellchar == ""):
@@ -58,7 +53,8 @@ def readfile(fname):
         for i in range(1, 10):
             cellname = rowname + str(i)
             entry = init_clueset(row_entries[i-1])
-            readin_puzzle[cellname] = {"Marked?": "Unmarked", "Allowable": entry}
+            readin_puzzle[cellname] =\
+                {"Marked?": "Unmarked", "Allowable": entry}
     f.close()
     return readin_puzzle
 
