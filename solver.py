@@ -117,11 +117,25 @@ def min_number_allowed(inverted):
 
 
 def sweep_rows(puzzle, target_cell):
+    toreturn = {}
+    print(target_cell)
+
     target_value = list(puzzle[target_cell]["Allowable"])[0]
+    print(target_value)
+
     cell_set = [target_cell[0] + str(i) for i in range(1, 10)]
     cell_set.remove(target_cell)
-    for cellname in cell_set:
-        1
+
+    for cellname in p1.keys():
+        cellval = p1[cellname]
+        if (cellname in cell_set):
+            fromset = p1[cellname]["Allowed"]
+            fromset = fromset - target_value
+            cellval["Allowed"] = fromset
+        print(cellname)
+        print(cellval)
+        toreturn.update({cellname:  cellval})
+    return toreturn
 
 
 
