@@ -111,30 +111,44 @@ def inv_allowed_counts(puzzle):
 def pull_unmarked(puzzle):
     return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Unmarked"}
 
- 
+
+def min_number_allowed(inverted):
+    return min(inverted.keys())
+
+
+def sweep_rows(puzzle, target_cell):
+    target_value = list(puzzle[target_cell]["Allowable"])[0]
+    cell_set = [target_cell[0] + str(i) for i in range(1, 10)]
+    cell_set.remove(target_cell)
+    for cellname in cell_set:
+        1
+
+
+
 """
 def mainloop(puzzle):
     unmarked = pull_unmarked(puzzle)
-    if (len(unmarked)) == 0:
+    inverted_counts = inv_allowed_counts(unamrked)
+    min_inverted_counts = min(inverted_counts.keys())
+    cells_to_mark = len(unmarekd)
+
+    if (cells_to_mark == 0):
         print_state(puzzle)
-        sys.exit("Solution found")
+        return puzzle
 
-    if min_number_allowed(unmarked) == 0:
-        sys.exit("no solution found")
+    if min_inverted_acounts == 0 return puzzle 
 
-    else if (min_number_alloed
-         Else if minsize is 1, sweep value from rows, columns
-         and subsquares in the total puzzle copy
-         (not just the unmarked cells)
-         NOTE: subsquare attribute must be added to puzzle data structure
-         Mark the square in the whole puzzle
-    Then repeat at line 59
+    if min_inverted_accounts == 1:
+        target_cell = inv_allowed_counts(puzzle)[1][0] 
+        swept = sweepall(puzzle, target_cell))
+        marked = markcells(swept, target_cell)
+        return mainloop(marked)
 
-        Else if smallest allowed set is size 2+:
-        Choose a cell of that size
-        for each allowable value in the cell,
-        recurse on mainloop with the puzzle where the chosen cell has only
+    if min_inverted_accounts > 1:
+        target_values = inverted_counts[min_inverted_counts][1]
+        for value in target_values:
+
+
+        ecurse on mainloop with the puzzle where the chosen cell has only
         one allowable value of the 2+ in that cell
-        Use Nsol output from last call as parameter for each of these calls
-        Return the updated Nsol as end of function
 """
