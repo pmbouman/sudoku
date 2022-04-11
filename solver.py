@@ -16,12 +16,17 @@ and then 1-9 for the blank cells
 """
 
 """ First a utility function """
+
+
 def char_range(c1, c2):
     """Generates the characters from `c1` to `c2`, inclusive."""
     for c in range(ord(c1), ord(c2)+1):
         yield chr(c)
 
+
 """and we setup the important constant for the list ["a" ... "i"]"""
+
+
 ROWNAMES = list(char_range("a", "i"))
 
 
@@ -30,7 +35,7 @@ def init_clueset(cellchar):
     Solver configured tp read from CSV with an entry
     for each cell (1:9) or a blank
     This creates the set of possible walues in puzzle.
-    Allowed for that cell name.
+    Allowable for that cell name.
     """
     FULL_CLUESET = set(range(1, 10))
     if (cellchar == ""):
@@ -60,7 +65,7 @@ def readfile(fname):
 
 
 """DEBUG"""
-p1 = readfile("puzzle1.csv")
+puzzle = readfile("puzzle1.csv")
 
 
 def printcell(puzzle, cellname):
@@ -116,27 +121,33 @@ def min_number_allowed(inverted):
     return min(inverted.keys())
 
 
+def reduced_neighbor_set_rows(target_cell):
+    """
+    Creates a set of eight cell namess, excluding thr target cell,
+    to check when sweeping rows columns or subsquares
+    """
+    neighbor_set = [target_cell[0] + str(i) for i in range(1, 10)]
+    neighbor_set.remove(target_cell)
+    return neighbor_set
+
+
 def sweep_rows(puzzle, target_cell):
     toreturn = {}
-    print(target_cell)
 
-    target_value = list(puzzle[target_cell]["Allowable"])[0]
-    print(target_value)
+    target_value = puzzle[target_cell]["Allowable"]
+    # Note thaat a singleton will still be a set of one"
 
-    cell_set = [target_cell[0] + str(i) for i in range(1, 10)]
-    cell_set.remove(target_cell)
+    neighbor_set = reduced_neighbor_set_rows(target_cell)
 
-    for cellname in p1.keys():
-        cellval = p1[cellname]
-        if (cellname in cell_set):
-            fromset = p1[cellname]["Allowed"]
+    all_cell_names = puzzle.keys()
+    for cellname in all_cell_names:
+        cellval = puzzle[cellname]
+        if (cellname in neighbor_set):
+            fromset = puzzle[cellname]["Allowable"]
             fromset = fromset - target_value
-            cellval["Allowed"] = fromset
-        print(cellname)
-        print(cellval)
+            cellval["Allowable"] = fromset
         toreturn.update({cellname:  cellval})
     return toreturn
-
 
 
 """
