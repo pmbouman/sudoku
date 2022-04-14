@@ -92,7 +92,7 @@ def print_state(puzzle):
             print("------------")
 
 
-def Nallowed(puzzle, cellname):
+def Nallowable(puzzle, cellname):
     """
     Input: uzzle value and name of cell
     Output: N of allowable values for that cell
@@ -103,11 +103,11 @@ def Nallowed(puzzle, cellname):
 """ TODO: Break function into two """
 
 
-def inv_allowed_counts(puzzle):
-    allowed_counts = {key: Nallowed(puzzle, key) for key in puzzle.keys()}
+def inv_allowable_counts(puzzle):
+    allowable_counts = {key: Nallowable(puzzle, key) for key in puzzle.keys()}
 
     inv_map = {}
-    for key, value in allowed_counts.items():
+    for key, value in allowable_counts.items():
         inv_map[value] = inv_map.get(value, []) + [key]
  
     return inv_map
@@ -117,11 +117,11 @@ def pull_unmarked(puzzle):
     return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Unmarked"}
 
 
-def min_number_allowed(inverted):
+def min_number_allowable(inverted):
     return min(inverted.keys())
 
 
-def reduced_neighbor_set_rows(target_cell):
+def neighbor_set_rows(target_cell):
     """
     Creates a set of eight cell namess, excluding thr target cell,
     to check when sweeping rows columns or subsquares
@@ -131,13 +131,29 @@ def reduced_neighbor_set_rows(target_cell):
     return neighbor_set
 
 
+def neighbor_set_cols(target_cell):
+    """
+    Creates a set of eight cell namess, excluding thr target cell,
+    to check when sweeping  columns 
+    """
+    neighbor_set = [rowname + target_cell[1] for rowname in ROWNAMES]
+    neighbor_set.remove(target_cell)
+    return neighbor_set
+
+
+def neighbor_set(target_cell, neighborhood):
+    match neighborhood:
+        case "row":
+            neighbor_set = [target_cell[0] + str(i) for i in range(1, 10)]
+
+
 def sweep_rows(puzzle, target_cell):
     toreturn = {}
 
     target_value = puzzle[target_cell]["Allowable"]
     # Note thaat a singleton will still be a set of one"
 
-    neighbor_set = reduced_neighbor_set_rows(target_cell)
+    neighbor_set = neighbor_set_rows(target_cell)
 
     all_cell_names = puzzle.keys()
     for cellname in all_cell_names:
@@ -153,7 +169,7 @@ def sweep_rows(puzzle, target_cell):
 """
 def mainloop(puzzle):
     unmarked = pull_unmarked(puzzle)
-    inverted_counts = inv_allowed_counts(unamrked)
+    inverted_counts = inv_allowable_counts(unamrked)
     min_inverted_counts = min(inverted_counts.keys())
     cells_to_mark = len(unmarekd)
 
@@ -164,7 +180,7 @@ def mainloop(puzzle):
     if min_inverted_acounts == 0 return puzzle 
 
     if min_inverted_accounts == 1:
-        target_cell = inv_allowed_counts(puzzle)[1][0] 
+        target_cell = inv_allowable_counts(puzzle)[1][0] 
         swept = sweepall(puzzle, target_cell))
         marked = markcells(swept, target_cell)
         return mainloop(marked)
