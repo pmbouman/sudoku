@@ -109,7 +109,7 @@ def inv_allowable_counts(puzzle):
     inv_map = {}
     for key, value in allowable_counts.items():
         inv_map[value] = inv_map.get(value, []) + [key]
- 
+
     return inv_map
 
 
