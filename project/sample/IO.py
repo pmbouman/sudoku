@@ -1,15 +1,15 @@
 
 
-def init_clueset(cellchar):
+def _clueset(cellchar):
     """
     Solver configured tp read from CSV with an entry
     for each cell (1:9) or a blank
     This creates the set of possible walues in puzzle.
     Allowable for that cell name.
     """
-    FULL_CLUESET = set(range(1, 10))
+    full_allowable_set = set(range(1, 10))
     if (cellchar == ""):
-        return FULL_CLUESET
+        return full_allowable_set
     else:
         return {int(cellchar)}
 
@@ -27,7 +27,7 @@ def readfile(fname):
 
         for i in range(1, 10):
             cellname = rowname + str(i)
-            entry = init_clueset(row_entries[i-1])
+            entry = init_allowable_set(row_entries[i-1])
             readin_puzzle[cellname] =\
                 {"Marked?": "Unmarked", "Allowable": entry}
     f.close()
@@ -35,7 +35,7 @@ def readfile(fname):
 
 
 """DEBUG"""
-puzzle = readfile("puzzle1.csv")
+puzzle = readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
 
 
 def printcell(puzzle, cellname):
