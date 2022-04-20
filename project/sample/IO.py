@@ -1,6 +1,7 @@
 
+import constants as c
 
-def _clueset(cellchar):
+def init_allowable_set(cellchar):
     """
     Solver configured tp read from CSV with an entry
     for each cell (1:9) or a blank
@@ -21,7 +22,18 @@ a list of rows, for a second fuction to build the puzzle variable value """
 def readfile(fname):
     readin_puzzle = {}
     f = open(fname)
-    for rowname in ROWNAMES:
+    """ Read one row from the data
+        Parse out text row into 9 entrie for calles
+        Add these entries, indexed by cellname, to puzzle"""
+    """ Pseudocode:
+    for each crow a-i:
+    read a row
+    parse it into nine entries
+    add to existing data structure
+    repeat until 9 rows processed
+    """
+
+    for rowname in c.ROWNAMES:
         puzzle_row = f.readline()
         row_entries = puzzle_row.rstrip().split(",")
 
@@ -33,9 +45,6 @@ def readfile(fname):
     f.close()
     return readin_puzzle
 
-
-"""DEBUG"""
-puzzle = readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
 
 
 def printcell(puzzle, cellname):
@@ -51,7 +60,7 @@ def printcell(puzzle, cellname):
 
 
 def print_state(puzzle):
-    for rowname in ROWNAMES:
+    for rowname in c.ROWNAMES:
         for i in range(1, 10):
             printcell(puzzle, rowname + str(i))
             if i in {3, 6}:

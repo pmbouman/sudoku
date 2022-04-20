@@ -1,5 +1,5 @@
 import sys
-import IO as i
+import constants as c
 """
 4/6/22 PMB
 Solver is a sudoku solver that solves by depth-first
@@ -17,17 +17,6 @@ and then 1-9 for the blank cells
 
 """ First a utility function """
 
-
-def char_range(c1, c2):
-    """Generates the characters from `c1` to `c2`, inclusive."""
-    for c in range(ord(c1), ord(c2)+1):
-        yield chr(c)
-
-
-"""and we setup the important constant for the list ["a" ... "i"]"""
-
-
-ROWNAMES = list(char_range("a", "i"))
 
 
 def Nallowable(puzzle, cellname):
@@ -74,7 +63,7 @@ def neighbor_set_cols(target_cell):
     Creates a set of eight cell namess, excluding thr target cell,
     to check when sweeping columns
     """
-    neighbor_set = [rowname + target_cell[1] for rowname in ROWNAMES]
+    neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
     neighbor_set.remove(target_cell)
     return neighbor_set
 
@@ -131,3 +120,6 @@ def mainloop(puzzle):
         ecurse on mainloop with the puzzle where the chosen cell has only
         one allowable value of the 2+ in that cell
 """
+"""DEBUG"""
+puzzle = i.readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
+
