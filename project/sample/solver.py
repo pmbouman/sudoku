@@ -72,8 +72,15 @@ def neighbor_set(target_cell, neighborhood):
     match neighborhood:
         case "row":
             neighbor_set = [target_cell[0] + str(i) for i in range(1, 10)]
+        case "col":
+            neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
+        case "subsquare":
+            neighbor_set = subsq->cellnames[cellname->subsq[target_cell]]
 
+        neighbor_set.remove(target_cell)
+        return neighbor_set
 
+        
 def sweep_rows(puzzle, target_cell):
     toreturn = {}
 
