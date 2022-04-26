@@ -1,4 +1,5 @@
 import itertools
+"""and we setup the important constant for the list ["a" ... "i"]"""
 
 
 def char_range(c1, c2):
@@ -7,12 +8,8 @@ def char_range(c1, c2):
         yield chr(c)
 
 
-"""and we setup the important constant for the list ["a" ... "i"]"""
-
-
-ROWNAMES = list(char_range("a", "i"))
-
-
-for element in itertools.product(ROWNAMES, list(range(1,10)):
-    print(element)
+def doit():
+    ROWNAMES = list(char_range("a", "i"))
+    for element in itertools.product(ROWNAMES, list(range(1,10))):
+        print(element[0] + str(element[1]))
 
