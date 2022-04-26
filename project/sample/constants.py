@@ -1,3 +1,4 @@
+import itertools
 
 
 def char_range(c1, c2):
@@ -10,4 +11,8 @@ def char_range(c1, c2):
 
 
 ROWNAMES = list(char_range("a", "i"))
+
+
+for element in itertools.product(ROWNAMES, list(range(1,10)):
+    print(element)
 
