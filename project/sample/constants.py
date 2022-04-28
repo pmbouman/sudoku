@@ -10,6 +10,7 @@ def char_range(c1, c2):
 
 def doit():
     ROWNAMES = list(char_range("a", "i"))
-    for element in itertools.product(ROWNAMES, list(range(1,10))):
-        print(element[0] + str(element[1]))
+    return [x + str(y) for (x, y) in itertools.product(ROWNAMES, list(range(1,10)))]
+
+ALLCELLS = doit()
 
