@@ -64,6 +64,7 @@ def neighbor_set(target_cell, neighborhood):
         return neighbor_set
 
 def sweep_rows(puzzle, target_cell):
+    ### revise to pass in rows, cols, or subsquare
     toreturn = {}
 
     target_value = puzzle[target_cell]["Allowable"]
