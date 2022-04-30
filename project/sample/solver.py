@@ -48,26 +48,6 @@ def min_number_allowable(inverted):
     return min(inverted.keys())
 
 
-def neighbor_set_rows(target_cell):
-    """
-    Creates a set of eight cell namess, excluding thr target cell,
-    to check when sweeping rows columns or subsquares
-    """
-    neighbor_set = [target_cell[0] + str(i) for i in range(1, 10)]
-    neighbor_set.remove(target_cell)
-    return neighbor_set
-
-
-def neighbor_set_cols(target_cell):
-    """
-    Creates a set of eight cell namess, excluding thr target cell,
-    to check when sweeping columns
-    """
-    neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
-    neighbor_set.remove(target_cell)
-    return neighbor_set
-
-
 def neighbor_set(target_cell, neighborhood):
     match neighborhood:
         case "row":
@@ -76,11 +56,13 @@ def neighbor_set(target_cell, neighborhood):
             neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
         case "subsquare":
             neighbor_set = subsq->cellnames[cellname->subsq[target_cell]]
-
+###cSubsq -> cellnames is a dictionary mapping each subsquare to a list 
+### of constitutive cell names
+### cellname->subsquares is the inverse
+### To add to constants.pyc code
         neighbor_set.remove(target_cell)
         return neighbor_set
 
-        
 def sweep_rows(puzzle, target_cell):
     toreturn = {}
 
@@ -98,7 +80,7 @@ def sweep_rows(puzzle, target_cell):
             cellval["Allowable"] = fromset
         toreturn.update({cellname:  cellval})
     return toreturn
-
+### Wow, this coud be a lot better
 
 """
 def mainloop(puzzle):
