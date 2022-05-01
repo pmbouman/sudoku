@@ -1,5 +1,7 @@
 import sys
+import pipes
 import constants as c
+import IO asi
 """
 4/6/22 PMB
 Solver is a sudoku solver that solves by depth-first
@@ -9,7 +11,7 @@ Central data tructure is a dict mapping grid coordinates
 the set of remaining allowable values for the cell 9which
 will  be only one value for "solved" cells)
 
-{ cellname -> { Msrked? :  (Marked, Unmarked
+{ cellname _TO_ { Msrked? :  (Marked, Unmarked
 ), Allowable: (set of allowable values remaining in cell)}}
 Initialization means pluggig in values for cell "clues"
 and then 1-9 for the blank cells
@@ -32,12 +34,7 @@ def Nallowable(puzzle, cellname):
 
 def inv_allowable_counts(puzzle):
     allowable_counts = {key: Nallowable(puzzle, key) for key in puzzle.keys()}
-
-    inv_map = {}
-    for key, value in allowable_counts.items():
-        inv_map[value] = inv_map.get(value, []) + [key]
-
-    return inv_map
+    return c.invert_dict(allowable_counts)
 
 
 def pull_unmarked(puzzle):
@@ -55,33 +52,25 @@ def neighbor_set(target_cell, neighborhood):
         case "col":
             neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
         case "subsquare":
-            neighbor_set = subsq->cellnames[cellname->subsq[target_cell]]
-###cSubsq -> cellnames is a dictionary mapping each subsquare to a list 
-### of constitutive cell names
-### cellname->subsquares is the inverse
-### To add to constants.pyc code
+            neighbor_set = c.SUBSQ_TO_CELLNAME[CELLNAME_TO_SUBSQ[target_cell]]
         neighbor_set.remove(target_cell)
         return neighbor_set
 
-def sweep_rows(puzzle, target_cell):
-    ### revise to pass in rows, cols, or subsquare
-    toreturn = {}
-
-    target_value = puzzle[target_cell]["Allowable"]
-    # Note thaat a singleton will still be a set of one"
-
-    neighbor_set = neighbor_set_rows(target_cell)
-
-    all_cell_names = puzzle.keys()
-    for cellname in all_cell_names:
-        cellval = puzzle[cellname]
-        if (cellname in neighbor_set):
-            fromset = puzzle[cellname]["Allowable"]
-            fromset = fromset - target_value
-            cellval["Allowable"] = fromset
+def sweepout(neighbor_set, puzzle, targetval):
+    toreturn = puzzle
+    for cellname in neighbor_set:
+        fromset = toreturn[cellname]["Allowable"] - targetval
+        cellname["Allowable"] = fromset
         toreturn.update({cellname:  cellval})
     return toreturn
-### Wow, this coud be a lot better
+
+
+def sweepall(target_cell, puzzle):
+    targetval = puzzle[target_cell]["Allowable"]
+    step1 = sweepout(neighbor_set(target_cell, "rows"), puzzle, targetvaql)
+    step2 = sweepout(neighbor_set(target_cell, "col"), step1, targetval)
+    step3 = sweepout(neighbor_set(target_cell, "subsquare"), step2, targetval)
+    return step3
 
 """
 def mainloop(puzzle):
