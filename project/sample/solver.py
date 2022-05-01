@@ -32,7 +32,7 @@ def Nallowable(puzzle, cellname):
 
 def inv_allowable_counts(puzzle):
     allowable_counts = {key: Nallowable(puzzle, key) for key in puzzle.keys()}
-
+### NOTE use c.invert_dict
     inv_map = {}
     for key, value in allowable_counts.items():
         inv_map[value] = inv_map.get(value, []) + [key]
