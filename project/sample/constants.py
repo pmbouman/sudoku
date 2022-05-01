@@ -10,7 +10,8 @@ def char_range(c1, c2):
 
 ROWNAMES = list(char_range("a", "i"))
 ALLCELLS =  [(element[0] + str(element[1]))
-    for element in itertools.product(ROWNAMES, list(range(1,10)))]
+for element in itertools.product(ROWNAMES, list(range(1,10)))]
+ 
 
 
 LETTERS_SUMMAND = {"a":0, "b":0, "c":0, "d":3, "e":3, "f":3, "g":6, "h":6, "i":6}
