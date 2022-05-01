@@ -8,7 +8,7 @@ def char_range(c1, c2):
         yield chr(c)
 
 
-    ROWNAMES = list(char_range("a", "i"))
-    ALLCELLS =  [(element[0] + str(element[1]))
-            for element in itertools.product(ROWNAMES, list(range(1,10)))]
+ROWNAMES = list(char_range("a", "i"))
+ALLCELLS =  [(element[0] + str(element[1]))
+    for element in itertools.product(ROWNAMES, list(range(1,10)))]
 
