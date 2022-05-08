@@ -1,7 +1,7 @@
 import sys
 import pipes
 import constants as c
-import IO asi
+import IO as i
 """
 4/6/22 PMB
 Solver is a sudoku solver that solves by depth-first
@@ -34,7 +34,6 @@ def Nallowable(puzzle, cellname):
 
 def inv_allowable_counts(puzzle):
     allowable_counts = {key: Nallowable(puzzle, key) for key in puzzle.keys()}
-### NOTE use c.invert_dict
     return c.invert_dict(allowable_counts)
 
 
@@ -53,22 +52,25 @@ def neighbor_set(target_cell, neighborhood):
         case "col":
             neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
         case "subsquare":
-            neighbor_set = c.SUBSQ_TO_CELLNAME[CELLNAME_TO_SUBSQ[target_cell]]
-        neighbor_set.remove(target_cell)
-        return neighbor_set
+            neighbor_set = c.SUBSQ_TO_CELLNAME[c.CELLNAME_TO_SUBSQ[target_cell]]
+    neighbor_set.remove(target_cell)
+    return neighbor_set
+
+
 
 def sweepout(neighbor_set, puzzle, targetval):
     toreturn = puzzle
     for cellname in neighbor_set:
         fromset = toreturn[cellname]["Allowable"] - targetval
-        cellname["Allowable"] = fromset
-        toreturn.update({cellname:  cellval})
+        print(fromset)
+###        cellname["Allowable"] = fromset
+###        toreturn.update({cellname:  cellval})
     return toreturn
 
 
 def sweepall(target_cell, puzzle):
     targetval = puzzle[target_cell]["Allowable"]
-    step1 = sweepout(neighbor_set(target_cell, "rows"), puzzle, targetvaql)
+    step1 = sweepout(neighbor_set(target_cell, "row"), puzzle, targetval)
     step2 = sweepout(neighbor_set(target_cell, "col"), step1, targetval)
     step3 = sweepout(neighbor_set(target_cell, "subsquare"), step2, targetval)
     return step3
@@ -101,5 +103,5 @@ def mainloop(puzzle):
         one allowable value of the 2+ in that cell
 """
 """DEBUG"""
-puzzle = i.readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
+puzzle = i.readfile("/home/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
 
