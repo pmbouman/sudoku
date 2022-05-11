@@ -29,9 +29,6 @@ def Nallowable(puzzle, cellname):
     return len(puzzle[cellname]["Allowable"])
 
 
-""" TODO: Break function into two """
-
-
 def inv_allowable_counts(puzzle):
     allowable_counts = {key: Nallowable(puzzle, key) for key in puzzle.keys()}
     return c.invert_dict(allowable_counts)
@@ -41,6 +38,11 @@ def pull_unmarked(puzzle):
     return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Unmarked"}
 
 
+def pull_marked(puzzle):
+    return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Marked"}
+
+
+
 def min_number_allowable(inverted):
     return min(inverted.keys())
 
@@ -48,26 +50,22 @@ def min_number_allowable(inverted):
 def neighbor_set(target_cell, neighborhood):
     match neighborhood:
         case "row":
-            neighbor_set = [target_cell[0] + str(i) for i in range(1, 10)]
+            neighbor_set = set([target_cell[0] + str(i) for i in range(1, 10)])
         case "col":
-            neighbor_set = [rowname + target_cell[1] for rowname in c.ROWNAMES]
+            neighbor_set = set([rowname + target_cell[1] for rowname in c.ROWNAMES])
         case "subsquare":
-            neighbor_set = c.SUBSQ_TO_CELLNAME[c.CELLNAME_TO_SUBSQ[target_cell]]
+            neighbor_set = set(c.SUBSQ_TO_CELLNAME[c.CELLNAME_TO_SUBSQ[target_cell]])
     neighbor_set.remove(target_cell)
     return neighbor_set
 
-
-
-def sweepout(neighbor_set, puzzle, targetval):
 """
 parameter targeetval is one-elemnt set
 """
+
+def sweepout(neighbor_set, puzzle, targetval):
     toreturn = puzzle
     for cellname in neighbor_set:
         fromset = toreturn[cellname]["Allowable"] - targetval
-        print(fromset)
-###        cellname["Allowable"] = fromset
-###        toreturn.update({cellname:  cellval})
     return toreturn
 
 
@@ -80,23 +78,31 @@ def sweepall(target_cell, puzzle):
 
 def markcells(puzzle, target_cell):
     toreturn = puzzle
-    toreturn[target_cell][Marked?] = "Marked"
+    toreturn[target_cell]["Marked?"] = "Marked"
     return toreturn
     
 def mainloop(puzzle):
     unmarked = pull_unmarked(puzzle)
-    inverted_counts = inv_allowable_counts(unamrked)
+    marked = pull_marked(puzzle)
+    inverted_counts = inv_allowable_counts(unmarked)
+    print(marked)
+    print(inverted_counts)
+    print(inverted_counts.keys())
     min_inverted_counts = min(inverted_counts.keys())
-    cells_to_mark = len(unmarekd)
+    cells_to_mark = len(unmarked)
+    print(cells_to_mark)
+    print(min_inverted_counts)
 
     if (cells_to_mark == 0):
         print_state(puzzle)
         return puzzle
 
-    if min_inverted_acounts == 0 return puzzle 
+    if min_inverted_counts == 0:
+        return puzzle 
 
-    if min_inverted_accounts == 1:
+    if min_inverted_counts == 1:
         target_cell = inv_allowable_counts(puzzle)[1][0] 
+        print(target_cell)
         swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
         return mainloop(marked)
@@ -104,10 +110,7 @@ def mainloop(puzzle):
     if min_inverted_accounts > 1:
         target_values = inverted_counts[min_inverted_counts][1]
         for value in target_values:
-
-
-        ecurse on mainloop with the puzzle where the chosen cell has only
-        one allowable value of the 2+ in that cell
+            return
 """DEBUG"""
 puzzle = i.readfile("/home/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
-
+mainloop(puzzle)
