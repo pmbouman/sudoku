@@ -11,7 +11,7 @@ Central data tructure is a dict mapping grid coordinates
 the set of remaining allowable values for the cell 9which
 will  be only one value for "solved" cells)
 
-{ cellname _TO_ { Msrked? :  (Marked, Unmarked
+{ cellname : { Marked? :  ("Marked", "Unmarked"
 ), Allowable: (set of allowable values remaining in cell)}}
 Initialization means pluggig in values for cell "clues"
 and then 1-9 for the blank cells
@@ -59,6 +59,9 @@ def neighbor_set(target_cell, neighborhood):
 
 
 def sweepout(neighbor_set, puzzle, targetval):
+"""
+parameter targeetval is one-elemnt set
+"""
     toreturn = puzzle
     for cellname in neighbor_set:
         fromset = toreturn[cellname]["Allowable"] - targetval
@@ -75,7 +78,11 @@ def sweepall(target_cell, puzzle):
     step3 = sweepout(neighbor_set(target_cell, "subsquare"), step2, targetval)
     return step3
 
-"""
+def markcells(puzzle, target_cell):
+    toreturn = puzzle
+    toreturn[target_cell][Marked?] = "Marked"
+    return toreturn
+    
 def mainloop(puzzle):
     unmarked = pull_unmarked(puzzle)
     inverted_counts = inv_allowable_counts(unamrked)
@@ -90,7 +97,7 @@ def mainloop(puzzle):
 
     if min_inverted_accounts == 1:
         target_cell = inv_allowable_counts(puzzle)[1][0] 
-        swept = sweepall(puzzle, target_cell))
+        swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
         return mainloop(marked)
 
@@ -101,7 +108,6 @@ def mainloop(puzzle):
 
         ecurse on mainloop with the puzzle where the chosen cell has only
         one allowable value of the 2+ in that cell
-"""
 """DEBUG"""
 puzzle = i.readfile("/home/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
 
