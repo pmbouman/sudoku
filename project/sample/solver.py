@@ -81,9 +81,6 @@ def neighbor_set(target_cell, neighborhood):
     neighbor_set.remove(target_cell)
     return neighbor_set
 
-"""
-parameter targeetval is one-elemnt set
-"""
 
 def sweepout(neighbor_set, puzzle, targetval):
     """
@@ -101,7 +98,11 @@ def sweepout(neighbor_set, puzzle, targetval):
 
 
 def sweepall(target_cell, puzzle):
-    targetval = puzzle[target_cell]["Allowable"]
+    """
+    Input: cellname (string) of target cell whose value  should be swept out
+    output: puzzle data structure with target values swept out
+    """
+    targetval = puzzle[target_cell]["Allowable"] ### A one-element set
     step1 = sweepout(neighbor_set(target_cell, "row"), puzzle, targetval)
     step2 = sweepout(neighbor_set(target_cell, "col"), step1, targetval)
     step3 = sweepout(neighbor_set(target_cell, "subsquare"), step2, targetval)
@@ -115,11 +116,9 @@ def markcells(puzzle, target_cell):
 
 def mainloop(puzzle):
     unmarked = pull_unmarked(puzzle)
-    marked = pull_marked(puzzle)
     inverted_counts = inv_allowable_counts(unmarked)
     min_inverted_counts = min(inverted_counts.keys())
     cells_to_mark = len(unmarked)
-    print(cells_to_mark)
 
     if (cells_to_mark == 0):
         print_state(puzzle)
@@ -129,13 +128,16 @@ def mainloop(puzzle):
         return puzzle
 
     if min_inverted_counts == 1:
-        target_cell = inv_allowable_counts(puzzle)[1][0] 
+        print("Singleton")
+        target_cell = inverted_counts[1][0]
+        print(inv_allowable_counts(puzzle)[1])
         print(target_cell)
         swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
+        print(marked[target_cell]["Marked?"])
         return mainloop(marked)
 
-    if min_inverted_accounts > 1:
+    if min_inverted_counts > 1:
         target_values = inverted_counts[min_inverted_counts][1]
         for value in target_values:
             return
