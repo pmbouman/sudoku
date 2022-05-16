@@ -68,7 +68,7 @@ def neighbor_set(target_cell, neighborhood):
     """
     Input:  neighborhood is "row", "col" or "subsqaure"
           Target_cell is string, name of cell sweeping from (like "a3")
-    Output: a set of cellnmes that are the indicated neighborhood
+    Output: a *set* of cellnmes that are the indicated neighborhood
     for sweeping out values
     """
     match neighborhood:
@@ -86,9 +86,17 @@ parameter targeetval is one-elemnt set
 """
 
 def sweepout(neighbor_set, puzzle, targetval):
+    """
+    Input: neighbor_set is the set of cellnames from 
+    the neighbor_set function
+    puzzle is a puzzle data sructure
+    targetval is a one-element set to be sewpt out
+    Output: puzzle structure with targetvsl swept out
+    """
     toreturn = puzzle
     for cellname in neighbor_set:
-        fromset = toreturn[cellname]["Allowable"] - targetval
+        remaining_allowables = toreturn[cellname]["Allowable"] - targetval
+        toreturn[cellname]["Allowable"] = remaining_allowables
     return toreturn
 
 
