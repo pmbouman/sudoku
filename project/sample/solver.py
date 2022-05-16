@@ -24,30 +24,53 @@ and then 1-9 for the blank cells
 def Nallowable(puzzle, cellname):
     """
     Input: uzzle value and name of cell
-    Output: N of allowable values for that cell
+    Output: integer N of allowable values for that cell
     """
     return len(puzzle[cellname]["Allowable"])
 
 
 def inv_allowable_counts(puzzle):
+    """
+    Input: puzzle data structure
+    Output: Inverted dictionary mapping number of allowable values to all the cellname
+    """
     allowable_counts = {key: Nallowable(puzzle, key) for key in puzzle.keys()}
     return c.invert_dict(allowable_counts)
 
 
 def pull_unmarked(puzzle):
+    """
+    Input: puzzle data structure
+    Output: All cells from the puzzle not yet marked
+    """
     return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Unmarked"}
 
 
 def pull_marked(puzzle):
+    """
+    Input: puzzle data structure
+    Output: All cells from the puzzle already marked
+    """
     return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Marked"}
 
 
 
 def min_number_allowable(inverted):
+    """
+    Input: inverted dictionary, mapping number sllowable to those cells
+    Output: Integer, minimum number of alowable valuse in cells.
+    If this is 0, there's an unfillable cell on the grid
+    """
     return min(inverted.keys())
 
 
 def neighbor_set(target_cell, neighborhood):
+    """
+    Input:  neighborhood is "row", "col" or "subsqaure"
+          Target_cell is string, name of cell sweeping from (like "a3")
+    Output: a set of cellnmes that are the indicated neighborhood
+    for sweeping out values
+    """
     match neighborhood:
         case "row":
             neighbor_set = set([target_cell[0] + str(i) for i in range(1, 10)])
@@ -80,25 +103,22 @@ def markcells(puzzle, target_cell):
     toreturn = puzzle
     toreturn[target_cell]["Marked?"] = "Marked"
     return toreturn
-    
+
+
 def mainloop(puzzle):
     unmarked = pull_unmarked(puzzle)
     marked = pull_marked(puzzle)
     inverted_counts = inv_allowable_counts(unmarked)
-    print(marked)
-    print(inverted_counts)
-    print(inverted_counts.keys())
     min_inverted_counts = min(inverted_counts.keys())
     cells_to_mark = len(unmarked)
     print(cells_to_mark)
-    print(min_inverted_counts)
 
     if (cells_to_mark == 0):
         print_state(puzzle)
         return puzzle
 
     if min_inverted_counts == 0:
-        return puzzle 
+        return puzzle
 
     if min_inverted_counts == 1:
         target_cell = inv_allowable_counts(puzzle)[1][0] 
@@ -112,5 +132,5 @@ def mainloop(puzzle):
         for value in target_values:
             return
 """DEBUG"""
-puzzle = i.readfile("/home/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
+puzzle = i.readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
 mainloop(puzzle)

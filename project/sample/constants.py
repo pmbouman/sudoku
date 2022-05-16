@@ -24,6 +24,7 @@ CELLNAME_TO_SUBSQ = {k: get_subsq_number(k) for k in ALLCELLS}
 
 def invert_dict(d):
     inv_map = {}
+
     for key, value in d.items():
         inv_map[value] = inv_map.get(value, []) + [key]
 
@@ -31,5 +32,5 @@ def invert_dict(d):
 
 SUBSQ_TO_CELLNAME = invert_dict(CELLNAME_TO_SUBSQ)
 
-def sumsq_neighbors(cllname):
+def subsq_neighbors(cllname):
     return SUBSQ_TO_CELLNAME[CELLNAME_TO_SUBSQ[cellname]]
