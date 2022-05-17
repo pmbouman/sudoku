@@ -87,7 +87,7 @@ def sweepout(neighbor_set, puzzle, targetval):
     targetval is a one-element set to be sewpt out
     Output: puzzle structure with targetvsl swept out
     """
-    toreturn = puzzle
+    toreturn = copy.deepcopy(puzzle)
     for cellname in neighbor_set:
         remaining_allowables = toreturn[cellname]["Allowable"] - targetval
         toreturn[cellname]["Allowable"] = remaining_allowables
@@ -106,40 +106,32 @@ def sweepall(target_cell, puzzle):
     return step3
 
 def markcells(puzzle, target_cell):
-    toreturn = puzzle
+    toreturn = copy.deepcopy(puzzle)
     toreturn[target_cell]["Marked?"] = "Marked"
     return toreturn
 
 
 def solver(puzzle):
     unmarked = pull_unmarked(puzzle)
-    inverted_counts = inv_allowable_counts(unmarked)
-    min_inverted_counts = min(inverted_counts.keys())
     cells_to_mark = len(unmarked)
-    print("Cells to mark:", cells_to_mark)
-    print(id(puzzle))
+
     if (cells_to_mark == 0):
         i.print_state(puzzle)
         return 1
 
+    inverted_counts = inv_allowable_counts(unmarked)
+    min_inverted_counts = min(inverted_counts.keys())
+
     if min_inverted_counts == 0:
-        print("empty allowed value for cell")
-        print(inverted_counts[0])
         return 0
 
     if min_inverted_counts == 1:
-        print("Singleton", id(puzzle))
-        print("cell h3: ", puzzle["h3"])
         target_cell = inverted_counts[1][0]
-        print("now sweeping out ", target_cell, "with value", puzzle[target_cell]["Allowable"]) 
         swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
-        print("marked:", id(marked))
         return solver(marked)
 
     if min_inverted_counts > 1:
-        print("cell h3: ", puzzle["h3"])
-        print("Multiple allowed")
         unmarked = pull_unmarked(puzzle)
         inverted_counts = inv_allowable_counts(unmarked)
         min_inverted_counts = min(inverted_counts.keys())
@@ -147,17 +139,14 @@ def solver(puzzle):
         target_cell = inverted_counts[min_inverted_counts][0]
         successes = 0
         for value in puzzle[target_cell]["Allowable"]:
-            print("Choosing ", value)
-            print("unmsrked, ", len(pull_unmarked(puzzle)))
-            torecurse = puzzle
-            print("torecurse:", id(torecurse), " puzzle:",id(puzzle))
+            torecurse = copy.deepcopy(puzzle)
             torecurse[target_cell]["Allowable"] = {value}
             successes += solver(torecurse)
         if (successes > 0):
             return 1
         else:
             return 0
-        print("Cells to mark now ",cells_to_mark)
 """DEBUG"""
-puzzle = i.readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
+puzzle = i.readfile("/home/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
+i.print_state(puzzle)
 solver(puzzle)
