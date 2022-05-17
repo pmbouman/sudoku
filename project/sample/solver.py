@@ -114,33 +114,46 @@ def markcells(puzzle, target_cell):
     return toreturn
 
 
-def mainloop(puzzle):
+def solver(puzzle):
     unmarked = pull_unmarked(puzzle)
     inverted_counts = inv_allowable_counts(unmarked)
     min_inverted_counts = min(inverted_counts.keys())
     cells_to_mark = len(unmarked)
+    print("Cells to mark:", cells_to_mark)
 
     if (cells_to_mark == 0):
-        print_state(puzzle)
-        return puzzle
+        i.print_state(puzzle)
+        return 1
 
     if min_inverted_counts == 0:
-        return puzzle
+        print("empty allowed value for cell")
+        print(inverted_counts[0])
+        return 0
 
     if min_inverted_counts == 1:
         print("Singleton")
+        print("cell h3: ", puzzle["h3"])
         target_cell = inverted_counts[1][0]
-        print(inv_allowable_counts(puzzle)[1])
-        print(target_cell)
+        print("now sweeping out ", target_cell, "with value", puzzle[target_cell]["Allowable"]) 
         swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
-        print(marked[target_cell]["Marked?"])
-        return mainloop(marked)
+        return solver(marked)
 
     if min_inverted_counts > 1:
-        target_values = inverted_counts[min_inverted_counts][1]
-        for value in target_values:
-            return
+        print("cell h3: ", puzzle["h3"])
+        print("Multiple allowed")
+        target_cell = inverted_counts[min_inverted_counts][0]
+        successes = 0
+        for value in puzzle[target_cell]["Allowable"]:
+            print("Choosing ", value)
+            torecurse = puzzle
+            torecurse[target_cell]["Allowable"] = {value}
+            successes += solver(torecurse)
+        if (successes > 0):
+            return 1
+        else:
+            return 0
+        print("Cells to mark now ",cells_to_mark)
 """DEBUG"""
 puzzle = i.readfile("/Users/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
-mainloop(puzzle)
+solver(puzzle)
