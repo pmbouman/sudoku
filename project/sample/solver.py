@@ -1,3 +1,4 @@
+import copy
 import sys
 import pipes
 import constants as c
@@ -16,10 +17,6 @@ will  be only one value for "solved" cells)
 Initialization means pluggig in values for cell "clues"
 and then 1-9 for the blank cells
 """
-
-""" First a utility function """
-
-
 
 def Nallowable(puzzle, cellname):
     """
@@ -120,7 +117,7 @@ def solver(puzzle):
     min_inverted_counts = min(inverted_counts.keys())
     cells_to_mark = len(unmarked)
     print("Cells to mark:", cells_to_mark)
-
+    print(id(puzzle))
     if (cells_to_mark == 0):
         i.print_state(puzzle)
         return 1
@@ -131,22 +128,29 @@ def solver(puzzle):
         return 0
 
     if min_inverted_counts == 1:
-        print("Singleton")
+        print("Singleton", id(puzzle))
         print("cell h3: ", puzzle["h3"])
         target_cell = inverted_counts[1][0]
         print("now sweeping out ", target_cell, "with value", puzzle[target_cell]["Allowable"]) 
         swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
+        print("marked:", id(marked))
         return solver(marked)
 
     if min_inverted_counts > 1:
         print("cell h3: ", puzzle["h3"])
         print("Multiple allowed")
+        unmarked = pull_unmarked(puzzle)
+        inverted_counts = inv_allowable_counts(unmarked)
+        min_inverted_counts = min(inverted_counts.keys())
+        cells_to_mark = len(unmarked)
         target_cell = inverted_counts[min_inverted_counts][0]
         successes = 0
         for value in puzzle[target_cell]["Allowable"]:
             print("Choosing ", value)
+            print("unmsrked, ", len(pull_unmarked(puzzle)))
             torecurse = puzzle
+            print("torecurse:", id(torecurse), " puzzle:",id(puzzle))
             torecurse[target_cell]["Allowable"] = {value}
             successes += solver(torecurse)
         if (successes > 0):
