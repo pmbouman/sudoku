@@ -46,6 +46,29 @@ def readfile(fname):
     return readin_puzzle
 
 
+def readfile(fname):
+    readin_puzzle = {}
+    f = open(fname)
+    """ Read one row from the data
+        Parse out text row into 9 entrie for calles
+        Add these entries, indexed by cellname, to puzzle"""
+    """ Pseudocode:
+    for each crow a-i:
+    read a row
+    parse it into nine entries
+    add to existing data structure
+    repeat until 9 rows processed
+    """
+
+    for rowname in c.ROWNAMES:
+        puzzle_row = f.readline()
+        row_entries = puzzle_row.rstrip().split(",")
+
+        for i in range(1, 10):
+            cellname = rowname + str(i)
+            entry = init_allowable_set(row_entries[i-1])
+            readin_puzzle[cellname] =\
+    readin_puzzle = {}
 
 def printcell(puzzle, cellname):
     allowables = puzzle[cellname]["Allowable"]
