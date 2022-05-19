@@ -147,6 +147,4 @@ def solver(puzzle):
         else:
             return 0
 """DEBUG"""
-puzzle = i.readfile("/home/peterbouman/Desktop/sudoku/project/data/puzzle1.csv")
-i.print_state(puzzle)
-solver(puzzle)
+i.euler_doall("/Users/peterbouman/Desktop/sudoku/project/data/euler_sudoku.txt", solver)
