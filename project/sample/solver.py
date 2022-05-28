@@ -1,6 +1,4 @@
 import copy
-import sys
-import pipes
 import constants as c
 import IO as i
 """
@@ -42,13 +40,6 @@ def pull_unmarked(puzzle):
     """
     return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Unmarked"}
 
-
-def pull_marked(puzzle):
-    """
-    Input: puzzle data structure
-    Output: All cells from the puzzle already marked
-    """
-    return {k: v for k,  v in puzzle.items() if v["Marked?"] == "Marked"}
 
 
 
@@ -121,22 +112,17 @@ def solver(puzzle):
 
     inverted_counts = inv_allowable_counts(unmarked)
     min_inverted_counts = min(inverted_counts.keys())
+    target_cell = inverted_counts[min_inverted_counts][0]
 
     if min_inverted_counts == 0:
         return 0
 
     if min_inverted_counts == 1:
-        target_cell = inverted_counts[1][0]
         swept = sweepall(target_cell, puzzle)
         marked = markcells(swept, target_cell)
         return solver(marked)
 
     if min_inverted_counts > 1:
-        unmarked = pull_unmarked(puzzle)
-        inverted_counts = inv_allowable_counts(unmarked)
-        min_inverted_counts = min(inverted_counts.keys())
-        cells_to_mark = len(unmarked)
-        target_cell = inverted_counts[min_inverted_counts][0]
         successes = 0
         for value in puzzle[target_cell]["Allowable"]:
             torecurse = copy.deepcopy(puzzle)
